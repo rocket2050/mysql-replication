@@ -1,0 +1,40 @@
+---
+- name: Config file for mysql
+  template:
+    src: my.cnf.j2
+    dest: /etc/my.cnf
+
+- name: Starting mysql
+  service: name=mysqld state=restarted
+
+
+- name: Mysql Configuration
+  command: 'mysql -e "{{ item }}"'
+  with_items:
+    - CREATE DATABASE {{ master_db_name }};
+    - create user '{{ master_user }}'@'%' identified by '{{ master_password }}';
+    - grant replication slave on *.* to '{{ master_user }}'@'%';
+    - update mysql.user set Repl_client_priv='Y' where user= '{{ master_user }}';
+    - FLUSH PRIVILEGES;
+ 
+
+- name: Config file for mysql
+  template:
+    src: sql.sh.j2
+    dest: /root/sql.sh
+    
+- name: run the script
+  command: bash /root/sql.sh 	
+
+- name: copy a file from remote server
+  fetch:
+    src: /root/output.txt
+    dest: /etc/ansible/roles/output.txt
+    flat: yes
+
+
+
+
+
+
+

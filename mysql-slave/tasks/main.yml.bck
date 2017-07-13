@@ -1,0 +1,29 @@
+---
+- name: Config file for mysql
+  template:
+    src: my.cnf.j2
+    dest: /etc/my.cnf
+
+- name: Starting mysql
+  service: name=mysqld state=restarted
+
+
+- name: Mysql Configuration
+  command: 'mysql -e "{{ item }}"'
+  with_items:
+    - CREATE DATABASE {{ master_db_name }};
+    - create user '{{ master_user }}'@'%' identified by '{{ master_password }}';
+    - grant replication slave on *.* to '{{ master_user }}'@'%';
+    - update mysql.user set Repl_client_priv='Y' where user= '{{ master_user }}';
+    - FLUSH PRIVILEGES;
+    - STOP SLAVE;
+    - CHANGE MASTER TO MASTER_HOST = '{{ master_ip }}', MASTER_USER = '{{ master_user }}', MASTER_PASSWORD = '{{ master_password }}', MASTER_LOG_FILE = 'master_log_file', MASTER_LOG_POS = master_log_pos;
+    - START SLAVE;
+ 
+#- name: Config file for mysql
+#  template:
+#    src: output.txt.j2
+#    dest: /root/output.txt
+
+
+
