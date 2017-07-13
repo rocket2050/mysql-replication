@@ -12,9 +12,9 @@
   command: 'mysql -e "{{ item }}"'
   with_items:
     - CREATE DATABASE {{ master_db_name }};
-    - create user '{{ master_user }}'@'%' identified by '{{ master_password }}';
-    - grant replication slave on *.* to '{{ master_user }}'@'%';
-    - update mysql.user set Repl_client_priv='Y' where user= '{{ master_user }}';
+    - create user '{{ user_name }}'@'%' identified by '{{ password }}';
+    - grant replication slave on *.* to '{{ user_name }}'@'%';
+    - update mysql.user set Repl_client_priv='Y' where user= '{{ user_name }}';
     - FLUSH PRIVILEGES;
  
 
