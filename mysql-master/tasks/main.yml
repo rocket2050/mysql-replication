@@ -33,8 +33,8 @@
 
 - name: copy a file from remote server
   fetch:
-    src: /root/output.txt
-    dest: /etc/ansible/roles/output.txt
+    src: /root/mysqloutput
+    dest: /etc/ansible/roles/mysql-replication/mysql-master/templates/mysqloutput.j2
     flat: yes
 
 
