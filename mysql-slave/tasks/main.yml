@@ -8,11 +8,16 @@
   service: name=mysqld state=restarted
 
 
+- name: Create database user
+  mysql_user: user={{ user_name }} password={{ password }} priv=*.*:ALL state=present
+
+
+- name: Create database
+  mysql_db: db={{ master_db_name }} state=present
+
 - name: Mysql Configuration
   command: 'mysql -e "{{ item }}"'
   with_items:
-    - CREATE DATABASE {{ master_db_name }};
-    - create user '{{ user_name }}'@'%' identified by '{{ password }}';
     - grant replication slave on *.* to '{{ user_name }}'@'%';
     - update mysql.user set Repl_client_priv='Y' where user= '{{ user_name }}';
     - FLUSH PRIVILEGES;
