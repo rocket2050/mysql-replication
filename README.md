@@ -26,9 +26,9 @@ You can set the values accordingly
 
 # Example Playbook 
 
-- hosts: mysql-server
-  roles:
-    - mysql-server
+  - hosts: mysql-server
+    roles:
+      - mysql-server
 
 
 
