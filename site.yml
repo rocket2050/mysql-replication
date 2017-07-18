@@ -1,0 +1,8 @@
+---
+- hosts: mysql-master
+  roles:
+    - { role: "mysql-master" }
+
+- hosts: mysql-slave
+  roles:
+    - { role: "mysql-slave" }
